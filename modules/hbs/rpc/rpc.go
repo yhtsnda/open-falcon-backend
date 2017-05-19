@@ -1,11 +1,12 @@
 package rpc
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"net"
 	"net/rpc"
 	"net/rpc/jsonrpc"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
 
 	"github.com/Cepave/open-falcon-backend/modules/hbs/g"
 )
@@ -16,6 +17,7 @@ type NqmAgent int
 
 func Start() {
 	nqmAgentHbsService.Start()
+	agentHeartbeatService.Start()
 
 	addr := g.Config().Listen
 

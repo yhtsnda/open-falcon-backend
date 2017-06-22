@@ -1,11 +1,27 @@
+sudo: required
+
 language: go
 
 go:
   - 1.7
 
+services:
+  - docker
+
+before_install:
+  - docker pull mysql:5.7
+  - docker run -d -p 127.0.0.1:3306:3306
+    -e MYSQL_ROOT_PASSWORD=password
+    -v `pwd`/test/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+    -v `pwd`/scripts/mysql/db_schema:/docker-entrypoint-initdb.d
+    mysql:5.7
+  - docker ps | grep mysql
+
 script:
   - make all 
   - make pack
+  - go test -v ./modules/nqm-mng/service
+  - go test -v ./modules/nqm-mng/rdb -dsn_mysql="root:password@tcp(127.0.0.1:3306)/falcon_portal"
 
 after_success:
   - make clean

@@ -9,11 +9,12 @@ services:
   - docker
 
 before_install:
+  - sudo /etc/init.d/mysql stop
   - docker pull mysql:5.7
   - docker run -d -p 127.0.0.1:3306:3306
     -e MYSQL_ROOT_PASSWORD=password
-    -v `pwd`/test/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
-    -v `pwd`/scripts/mysql/db_schema:/docker-entrypoint-initdb.d
+    -v $(TRAVIS_BUILD_DIR)/test/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+    -v $(TRAVIS_BUILD_DIR)/scripts/mysql/db_schema:/docker-entrypoint-initdb.d
     mysql:5.7
   - docker ps | grep mysql
 
